@@ -3,11 +3,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import { ActivityIndicator, View } from 'react-native';
 import { AppProvider, useApp } from './src/AppContext';
-// import HomeScreen from './src/screens/HomeScreen';
+import HomeScreen from './src/screens/HomeScreen';
 import ProfileScreen from './src/screens/ProfileScreen';
-// import EditProfileScreen from './src/screens/EditProfileScreen';
-// import ActivityScreen from './src/screens/ActivityScreen';
-// import SettingsScreen from './src/screens/SettingsScreen';
+import EditProfileScreen from './src/screens/EditProfileScreen';
+import ActivityScreen from './src/screens/ActivityScreen';
+import SettingsScreen from './src/screens/SettingsScreen';
 
 const Stack = createNativeStackNavigator();
 
