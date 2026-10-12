@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const STORAGE_KEY = 'profile-activity-settings';
-const DEFAULT_PROFILE = {
+export const DEFAULT_PROFILE = {
     name: 'AnLe',
     bio: 'Hello I will go to buy honor win 2.',
     age: 20,
@@ -41,7 +41,12 @@ export function AppProvider({ children }) {
                 if (saved) {
                     const data = JSON.parse(saved);
                     if (typeof data.name === 'string' && data.name.trim() && typeof data.bio === 'string') {
-                        setProfile({ name: data.name, bio: data.bio });
+                        setProfile({
+                            name: data.name,
+                            bio: data.bio,
+                            age: typeof data.age === 'number' ? data.age : DEFAULT_PROFILE.age,
+                            job: typeof data.job === 'string' ? data.job : DEFAULT_PROFILE.job,
+                        });
                     }
                     if (typeof data.dark === 'boolean') setDark(data.dark);
                 }
