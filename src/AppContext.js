@@ -9,6 +9,12 @@ export const DEFAULT_PROFILE = {
     job: 'Student',
 };
 
+export const DEFAULT_ACTIVITIES = [
+    { id: '1', title: 'Đọc sách 20 phút', done: false },
+    { id: '2', title: 'Đi bộ ngoài trời', done: false },
+    { id: '3', title: 'Học một điều mới', done: false },
+];
+
 const lightTheme = {
     background: '#f4f6fb',
     surface: '#ffffff',
@@ -32,6 +38,7 @@ const AppContext = createContext(null);
 export function AppProvider({ children }) {
     const [profile, setProfile] = useState(DEFAULT_PROFILE);
     const [dark, setDark] = useState(false);
+    const [activities, setActivities] = useState(DEFAULT_ACTIVITIES);
     const [ready, setReady] = useState(false);
 
     useEffect(() => {
@@ -49,6 +56,9 @@ export function AppProvider({ children }) {
                         });
                     }
                     if (typeof data.dark === 'boolean') setDark(data.dark);
+                    if (Array.isArray(data.activities)) {
+                        setActivities(data.activities);
+                    }
                 }
             } catch (error) {
                 console.warn('Could not load saved settings; using defaults.', error);
@@ -63,10 +73,38 @@ export function AppProvider({ children }) {
     useEffect(() => {
         if (!ready) return;
 
-        AsyncStorage.setItem(STORAGE_KEY, JSON.stringify({ ...profile, dark })).catch((error) => {
+        AsyncStorage.setItem(
+            STORAGE_KEY,
+            JSON.stringify({ ...profile, dark, activities })
+        ).catch((error) => {
             console.warn('Could not save settings.', error);
         });
-    }, [profile, dark, ready]);
+    }, [profile, dark, activities, ready]);
+
+    function toggleActivity(id) {
+        setActivities((current) =>
+            current.map((item) => (item.id === id ? { ...item, done: !item.done } : item))
+        );
+    }
+
+    function addActivity(title) {
+        if (!title || !title.trim()) return false;
+        const newItem = {
+            id: Date.now().toString(),
+            title: title.trim(),
+            done: false,
+        };
+        setActivities((current) => [newItem, ...current]);
+        return true;
+    }
+
+    function deleteActivity(id) {
+        setActivities((current) => current.filter((item) => item.id !== id));
+    }
+
+    function resetActivities() {
+        setActivities(DEFAULT_ACTIVITIES);
+    }
 
     return (
         <AppContext.Provider
@@ -77,6 +115,12 @@ export function AppProvider({ children }) {
                 toggleTheme: () => setDark((current) => !current),
                 theme: dark ? darkTheme : lightTheme,
                 ready,
+                activities,
+                setActivities,
+                toggleActivity,
+                addActivity,
+                deleteActivity,
+                resetActivities,
             }}
         >
             {children}
