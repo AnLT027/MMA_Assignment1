@@ -13,7 +13,7 @@ export default function HomeScreen({ navigation }) {
       <Text style={[styles.body, { color: theme.muted }]}>
         Quản lý hồ sơ và hoạt động của bạn.
       </Text>
-      <ProfileCard name={profile.name} bio={profile.bio} age={profile.age} job={profile.job} />
+
       <ActionButton title="Xem hồ sơ" onPress={() => navigation.navigate('Profile')} />
       <ActionButton
         title="Xem hoạt động"
